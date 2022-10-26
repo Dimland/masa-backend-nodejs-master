@@ -4,6 +4,7 @@ import { systemError } from "../entities";
 
 export class ResponseHelper {
     public static handleError(response: Response, error: systemError): Response<any, Record<string, any>> {
+        console.log(error.code + " " + error.message);
         switch (error.code) {
             case ErrorCodes.ConnectionError:
                 return response.status(408).json({

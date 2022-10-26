@@ -50,21 +50,26 @@ const getCoffeShopById = async (req: Request, res: Response, next: NextFunction)
 };
 
 const updateCoffeShopId = async (req: Request, res: Response, next: NextFunction) => {
-
     const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
+    console.log("Я тут!");
     if (typeof numericParamOrError === "number") {
         if (numericParamOrError > 0) {
-            coffeShopsService.getCoffeShopById(numericParamOrError)
-                .then((result: coffeShop) => {
-                    return res.status(200).json({
-                        result
-                    });
+
+
+            const body: coffeShop = req.body;
+            console.log("Я тут!2");
+            coffeShopsService.updateCoffeShopId({
+                id: numericParamOrError,
+                address: body.address,
+                square: body.square,
+                work: body.work,
+                name: body.name
+                      })
+            .then(() => {
+                return res.sendStatus(200);
                 })
                 .catch((error: systemError) => {
                     return ResponseHelper.handleError(res, error);
-
-
-
                 });
             }
             else {
@@ -75,7 +80,6 @@ const updateCoffeShopId = async (req: Request, res: Response, next: NextFunction
             return ResponseHelper.handleError(res, numericParamOrError);
         }
     };
-
 
 
 

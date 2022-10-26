@@ -8,7 +8,7 @@ import { SqlHelper } from "../helpers/sql.helpers";
 interface localCoffeShop {
     id_coffe_shops: number,
     address: string,
-    square: string,
+    square: number,
     working_hours: string,
     name: string;
 }
@@ -16,6 +16,7 @@ interface localCoffeShop {
 interface ICoffeShopsService {
     getCoffeShops(): Promise<coffeShop[]>;
     getCoffeShopById(id: number): Promise<coffeShop>;
+    updateCoffeShopId(coffe_shop: coffeShop): Promise<void>;
     // addStore(adress: string,  square: number, working_hors: string, name: string;);
 };
 
@@ -27,7 +28,7 @@ export class CoffeShopsService implements ICoffeShopsService {
         return new Promise<coffeShop[]>((resolve, reject) => {
             const result: coffeShop[] = [];
 
-                SqlHelper.executeQueryArrayResult<localCoffeShop>(Queries.allStores)
+                SqlHelper.executeQueryArrayResult<localCoffeShop>(Queries.allCoffeShops)
 
                         .then((queryResult: localCoffeShop[]) => {
                                 queryResult.forEach((coffeShop: localCoffeShop) => {
@@ -50,7 +51,7 @@ export class CoffeShopsService implements ICoffeShopsService {
         return new Promise<coffeShop>((resolve, reject) => {
        
                   
-      SqlHelper.executeQuerySingleResult<localCoffeShop>(Queries.store_found_id, id)
+      SqlHelper.executeQuerySingleResult<localCoffeShop>(Queries.coffeShopsId, id)
 
         
         .then((queryResult: localCoffeShop) => {
@@ -62,40 +63,22 @@ export class CoffeShopsService implements ICoffeShopsService {
     });
 }
 
-    // public getBoardTypes(): Promise<coffeShop[]> {
-    //     return new Promise<coffeShop[]>((resolve, reject) => {
-    //         const result: coffeShop[] = [];
-    //         const sql: SqlClient = require("msnodesqlv8");
 
-    //         const connectionString: string = DB_CONNECTION_STRING;
-    //         const query: string = Queries.allStores;
 
-    //         sql.open(connectionString, (connectionError: Error, connection: Connection) => {
-    //             // Например, сервер не работает
-    //             if (connectionError) {
-    //                 reject(ErrorHelper.parseError(ErrorCodes.ConnectionError, General.DbconnectionError));
-    //             }
-    //             else {
-    //                 connection.query(query, (queryError: Error | undefined, queryResult: localWhiteBoardType[] | undefined) => {
-    //                     if (queryError) {
-    //                         reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
-    //                     }
-    //                     else {
-    //                         const result: whiteBoardType[] = [];
-    //                         if (queryResult !== undefined) {
-    //                             queryResult.forEach(whiteBoardType => {
-    //                                 result.push(
-    //                                     this.parseLocalBoardType(whiteBoardType)
-    //                                 )
-    //                             });
-    //                         }
-    //                         resolve(result);
-    //                     }
-    //                 })
-    //             }
-    //         });
-    //     })
-    // };
+
+    public updateCoffeShopId(coffe_shop: coffeShop): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            SqlHelper.executeQueryNoResult<localCoffeShop>(Queries.updCoffeShop, coffe_shop.address, coffe_shop.square, coffe_shop.work, coffe_shop.name, coffe_shop.id)
+                .then(() => {
+                    console.log("Я тут 3");
+                    resolve();
+                })
+                .catch((error: systemError) => {
+                    console.log("Я тут 4");
+                    reject(error);
+                });
+        })
+    }
 
 
     private parseLocalCoffeShop(local: localCoffeShop): coffeShop {

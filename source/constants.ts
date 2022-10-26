@@ -30,7 +30,7 @@ export class SqlParameters {
 export const DB_CONNECTION_STRING: string = "server=.;Database=Dimland_store;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
  
 
-var adress: string;
+var address: string;
 var square: number;
 var working_hors: string;
 var name: string;
@@ -38,8 +38,8 @@ var name: string;
 export class Queries {
   
 
-    public static allStores: string =  "SELECT * FROM coffe_shops";
-    public static store_found_id: string = `SELECT * FROM coffe_shops where id_coffe_shops = ?`;
-    public static addStore: string = "exec sp_coffe_shops ";
+    public static allCoffeShops: string =  "SELECT * FROM coffe_shops";
+    public static coffeShopsId: string = `SELECT * FROM coffe_shops where id_coffe_shops = ?`;
+    public static updCoffeShop: string = `UPDATE coffe_shops SET address = ?, square = ?, working_hours = ?, name = ? WHERE id_coffe_shops = ?`;
     static WhiteBoardTypeById: string;
 }

@@ -1,9 +1,9 @@
 export interface coffeShop {
     id: number;
     address: string;
-    square: string;
+    square: number;
     work: string;
-    name: string;
+    name: string
     
 }
 
