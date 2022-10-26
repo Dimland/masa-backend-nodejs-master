@@ -3,9 +3,12 @@ import { ErrorHelper } from "./error.helpers";
 import { DB_CONNECTION_STRING } from "../constants";
 import { ErrorCodes, General } from "../constants";
 import { systemError } from "../entities";
-
+import { Request } from "mssql";
 export class SqlHelper {
     static sql: SqlClient = require("msnodesqlv8");
+    static mssql: SqlClient = require("mssql");
+
+    // FIXME: SQL injection
 
     // public static SqlConnection(): Promise<Connection> {
 
@@ -34,12 +37,12 @@ export class SqlHelper {
 
    
 
-    public static executeQuerySingleResult<T>(query: string): Promise<T> {
+    public static executeQuerySingleResult<T>(query: string, param: number): Promise<T> {
         return new Promise<T>((resolve, reject) => {
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
                     const notFoundError: systemError = ErrorHelper.parseError(ErrorCodes.noData, General.noDataFound);
-                    connection.query(query, (queryError: Error | undefined, queryResult: T[] | undefined) => {
+                    connection.query(query, [param], (queryError: Error | undefined, queryResult: T[] | undefined) => {
                         if (queryError) {
                             reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
                         }

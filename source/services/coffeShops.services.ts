@@ -50,10 +50,7 @@ export class CoffeShopsService implements ICoffeShopsService {
         return new Promise<coffeShop>((resolve, reject) => {
        
                   
-
-    SqlHelper.executeQuerySingleResult<localCoffeShop>(`${Queries.store_found_id} ${id}`)
-
-
+      SqlHelper.executeQuerySingleResult<localCoffeShop>(Queries.store_found_id, id)
 
         
         .then((queryResult: localCoffeShop) => {

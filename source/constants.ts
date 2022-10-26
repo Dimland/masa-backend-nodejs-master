@@ -21,6 +21,12 @@ export class General {
     public static InputParameterNotSupplied: string = "Input parameter not supplied";
 }
 
+export class SqlParameters {
+    public static Id: string = 'id';
+}
+
+
+
 export const DB_CONNECTION_STRING: string = "server=.;Database=Dimland_store;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
  
 
@@ -33,7 +39,7 @@ export class Queries {
   
 
     public static allStores: string =  "SELECT * FROM coffe_shops";
-    public static store_found_id: string = "SELECT * FROM coffe_shops where id_coffe_shops = ";
+    public static store_found_id: string = `SELECT * FROM coffe_shops where id_coffe_shops = ?`;
     public static addStore: string = "exec sp_coffe_shops ";
     static WhiteBoardTypeById: string;
 }

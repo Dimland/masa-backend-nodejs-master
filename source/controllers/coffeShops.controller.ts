@@ -3,6 +3,7 @@ import { resolveProjectReferencePath } from 'typescript';
 import { ErrorCodes, General } from '../constants';
 import { systemError, coffeShop } from '../entities';
 import { ErrorHelper } from '../helpers/error.helpers';
+import { RequestHelper } from '../helpers/request.helper';
 import { ResponseHelper } from '../helpers/response.helper';
 import { CoffeShopsService } from '../services/coffeShops.services';
 
@@ -22,45 +23,63 @@ const getCoffeShops = async (req: Request, res: Response, next: NextFunction) =>
 };
 
 const getCoffeShopById = async (req: Request, res: Response, next: NextFunction) => {
-    let id: number = -1;
-    const sId: string = req.params.id;
+    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
 
-    if (isNaN(Number(req.params.id))) {
-        // ToDO: Error handling
-
-        const nonNumericError: systemError = ErrorHelper.parseError(ErrorCodes.NonNumericInput, General.NonNumericInput);
-        return ResponseHelper.handleError(res, nonNumericError);
-    }
-
-    if (sId !== null && sId !== undefined) {
-        id = parseInt(sId);
-    }
-    else {
-        // TODO: Error handling
-        const noInputParameterError: systemError = ErrorHelper.parseError(ErrorCodes.InputParameterNotSupplied, General.InputParameterNotSupplied);
-        return ResponseHelper.handleError(res, noInputParameterError);
-    }
-
-    if (id > 0) {
-        coffeShopsService.getCoffeShopById(id)
-            .then((result: coffeShop) => {
-                return res.status(200).json({
-                    result
+    if (typeof numericParamOrError === "number") {
+        if (numericParamOrError > 0) {
+            coffeShopsService.getCoffeShopById(numericParamOrError)
+                .then((result: coffeShop) => {
+                    return res.status(200).json({
+                        result
+                    });
+                })
+                .catch((error: systemError) => {
+                    return ResponseHelper.handleError(res, error);
                 });
-            })
-            .catch((error: systemError) => {
-                return ResponseHelper.handleError(res, error);
-            });
+        }
+        else {
+            // TODO: Error handling
+            
+        }
+
     }
     else {
         // TODO: Error handling
+        return ResponseHelper.handleError(res, numericParamOrError);
     }
-
-
 };
 
+const updateCoffeShopId = async (req: Request, res: Response, next: NextFunction) => {
+
+    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
+    if (typeof numericParamOrError === "number") {
+        if (numericParamOrError > 0) {
+            coffeShopsService.getCoffeShopById(numericParamOrError)
+                .then((result: coffeShop) => {
+                    return res.status(200).json({
+                        result
+                    });
+                })
+                .catch((error: systemError) => {
+                    return ResponseHelper.handleError(res, error);
+
+
+
+                });
+            }
+            else {
+                // TODO: Error handling
+            }
+        }
+        else {
+            return ResponseHelper.handleError(res, numericParamOrError);
+        }
+    };
 
 
 
 
-export default { getCoffeShops, getCoffeShopById };
+
+
+
+export default { getCoffeShops, getCoffeShopById, updateCoffeShopId};
