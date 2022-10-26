@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ErrorCodes } from '../constants';
 import { systemError, coffeShop } from '../entities';
+import { ResponseHelper } from '../helpers/response.helper';
 import { CoffeShopsService } from '../services/coffeShops.services';
 
 const coffeShopsService: CoffeShopsService = new CoffeShopsService();
@@ -14,21 +15,7 @@ const getCoffeShops = async (req: Request, res: Response, next: NextFunction) =>
             });
         })
         .catch((error: systemError) => {
-
-            switch (error.code) {
-                case ErrorCodes.ConnectionError:
-                    return res.status(408).json({
-                        errorMessage: error.message
-                    });
-                case ErrorCodes.queryError:
-                    return res.status(406).json({
-                        errorMessage: error.message
-                    });
-                default:
-                    return res.status(400).json({
-                        errorMessage: error.message
-                    });
-            }
+            return ResponseHelper.handleError(res, error);
         });
 };
 
@@ -55,20 +42,7 @@ const getCoffeShopById = async (req: Request, res: Response, next: NextFunction)
                 });
             })
             .catch((error: systemError) => {
-                switch (error.code) {
-                    case ErrorCodes.ConnectionError:
-                        return res.status(408).json({
-                            errorMessage: error.message
-                        });
-                    case ErrorCodes.queryError:
-                        return res.status(406).json({
-                            errorMessage: error.message
-                        });
-                    default:
-                        return res.status(400).json({
-                            errorMessage: error.message
-                        });
-                }
+                return ResponseHelper.handleError(res, error);
             });
     }
     else {
