@@ -18,6 +18,7 @@ interface ICoffeShopsService {
     getCoffeShopById(id: number): Promise<coffeShop>;
     updateCoffeShopId(coffe_shop: coffeShop): Promise<coffeShop>;
     addCoffeShop(coffe_shop: coffeShop): Promise<coffeShop>;
+    deleteCoffeShopId(id: number): Promise<void>;
 
     // addStore(adress: string,  square: number, working_hors: string, name: string;);
 };
@@ -94,7 +95,17 @@ export class CoffeShopsService implements ICoffeShopsService {
         })
     }
 
-
+    public deleteCoffeShopId(id: number): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            SqlHelper.executeQueryNoResult<localCoffeShop>(Queries.DeleteCoffeShop, id)
+                .then(() => {
+                    resolve();
+                })
+                .catch((error: systemError) => {
+                    reject(error);
+                });
+        });
+    }
 
 
     private parseLocalCoffeShop(local: localCoffeShop): coffeShop {

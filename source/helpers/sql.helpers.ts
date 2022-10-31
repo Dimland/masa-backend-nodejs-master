@@ -125,7 +125,14 @@ export class SqlHelper {
                     const q: Query = connection.query(query, params, (queryError: Error | undefined, rows: any) => {
 
                         if (queryError) {
-                            reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
+                            switch (queryError.code) {
+                                case 547:
+                                    reject(ErrorHelper.parseError(ErrorCodes.DeletionConflict, General.DeletionConflict));
+                                    break;
+                                default:
+                                    reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
+                                    break;
+                            }
                         }
                     });
 

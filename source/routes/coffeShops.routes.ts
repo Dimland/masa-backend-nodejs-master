@@ -7,6 +7,8 @@ router.get('/coffeShops', controller.getCoffeShops);
 router.get('/coffeShop/:id', controller.getCoffeShopById);
 router.put('/coffeShop/:id', controller.updateCoffeShopId);
 router.post('/add-coffeShop', controller.addCoffeShop);
+router.delete('/delete-coffeShop/:id', controller.deleteCoffeShopId);
+
 
 // router.post('/addstore',  controller.addStore);
 

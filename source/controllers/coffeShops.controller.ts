@@ -49,6 +49,32 @@ const getCoffeShopById = async (req: Request, res: Response, next: NextFunction)
     }
 };
 
+const deleteCoffeShopId = async (req: Request, res: Response, next: NextFunction) => {
+
+    const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
+    if (typeof numericParamOrError === "number") {
+        if (numericParamOrError > 0) {
+            coffeShopsService.deleteCoffeShopId(numericParamOrError)
+                .then(() => {
+                    return res.sendStatus(200);
+                })
+                .catch((error: systemError) => {
+                    return ResponseHelper.handleError(res, error);
+                });
+        }
+        else {
+            // TODO: Error handling
+        }
+    }
+    else {
+        return ResponseHelper.handleError(res, numericParamOrError);
+    }
+};
+
+
+
+
+
 const updateCoffeShopId = async (req: Request, res: Response, next: NextFunction) => {
     const numericParamOrError: number | systemError = RequestHelper.ParseNumericInput(req.params.id);
     console.log("Я тут!");
@@ -103,4 +129,4 @@ const updateCoffeShopId = async (req: Request, res: Response, next: NextFunction
     }
 
 
-export default { getCoffeShops, getCoffeShopById, updateCoffeShopId, addCoffeShop};
+export default { getCoffeShops, getCoffeShopById, updateCoffeShopId, addCoffeShop, deleteCoffeShopId};

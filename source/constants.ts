@@ -8,6 +8,7 @@ export class ErrorCodes {
     public static noData: number = 102;
     public static NonNumericInput: number = 103;
     public static InputParameterNotSupplied: number = 104;
+    public static DeletionConflict: number = 105;
 }
 
 export class General {
@@ -19,6 +20,8 @@ export class General {
     public static noDataFound: string = "No data found";
     public static NonNumericInput: string = "Non numeric input supplied";
     public static InputParameterNotSupplied: string = "Input parameter not supplied";
+    public static DeletionConflict: string = "Delete failed due to conflict";
+
 }
 
 export class SqlParameters {
@@ -43,6 +46,7 @@ export class Queries {
     public static updCoffeShop: string = `UPDATE coffe_shops SET address = ?, square = ?, working_hours = ?, name = ? WHERE id_coffe_shops = ?`;
     public static AddCoffeShop: string = "INSERT INTO coffe_shops (address, square, working_hours, name) VALUES (?, ?,?,?)";
     public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id";
-    
+    public static DeleteCoffeShop: string = "DELETE FROM coffe_shops WHERE id_coffe_shops = ?";
+
     static WhiteBoardTypeById: string;
 }
