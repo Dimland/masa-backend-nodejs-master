@@ -65,8 +65,8 @@ const updateCoffeShopId = async (req: Request, res: Response, next: NextFunction
                 work: body.work,
                 name: body.name
                       })
-            .then(() => {
-                return res.sendStatus(200);
+                      .then((result: coffeShop) => {
+                        return res.status(200).json(result);
                 })
                 .catch((error: systemError) => {
                     return ResponseHelper.handleError(res, error);

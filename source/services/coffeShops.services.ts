@@ -16,7 +16,7 @@ interface localCoffeShop {
 interface ICoffeShopsService {
     getCoffeShops(): Promise<coffeShop[]>;
     getCoffeShopById(id: number): Promise<coffeShop>;
-    updateCoffeShopId(coffe_shop: coffeShop): Promise<void>;
+    updateCoffeShopId(coffe_shop: coffeShop): Promise<coffeShop>;
     addCoffeShop(coffe_shop: coffeShop): Promise<coffeShop>;
 
     // addStore(adress: string,  square: number, working_hors: string, name: string;);
@@ -68,12 +68,12 @@ export class CoffeShopsService implements ICoffeShopsService {
 
 
 
-    public updateCoffeShopId(coffe_shop: coffeShop): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            SqlHelper.executeQueryNoResult<localCoffeShop>(Queries.updCoffeShop, coffe_shop.address, coffe_shop.square, coffe_shop.work, coffe_shop.name, coffe_shop.id)
+    public updateCoffeShopId(coffe_shop: coffeShop): Promise<coffeShop> {
+        return new Promise<coffeShop>((resolve, reject) => {
+            SqlHelper.executeQueryNoResult<coffeShop>(Queries.updCoffeShop, coffe_shop.address, coffe_shop.square, coffe_shop.work, coffe_shop.name, coffe_shop.id)
                 .then(() => {
 
-                    resolve();
+                    resolve(coffe_shop);
                 })
                 .catch((error: systemError) => {
 
