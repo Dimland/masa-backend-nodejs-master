@@ -70,11 +70,11 @@ export class CoffeShopsService implements ICoffeShopsService {
         return new Promise<void>((resolve, reject) => {
             SqlHelper.executeQueryNoResult<localCoffeShop>(Queries.updCoffeShop, coffe_shop.address, coffe_shop.square, coffe_shop.work, coffe_shop.name, coffe_shop.id)
                 .then(() => {
-                    console.log("Я тут 3");
+
                     resolve();
                 })
                 .catch((error: systemError) => {
-                    console.log("Я тут 4");
+
                     reject(error);
                 });
         })
