@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { resolveProjectReferencePath } from 'typescript';
-import { ErrorCodes, General } from '../constants';
+import { ErrorCodes, General, NON_EXISTENT_ID } from '../constants';
 import { systemError, coffeShop } from '../entities';
 import { ErrorHelper } from '../helpers/error.helpers';
 import { RequestHelper } from '../helpers/request.helper';
@@ -81,9 +81,26 @@ const updateCoffeShopId = async (req: Request, res: Response, next: NextFunction
         }
     };
 
+    const addCoffeShop = async (req: Request, res: Response, next: NextFunction) => {
+        const body: coffeShop = req.body;
+
+        coffeShopsService.addCoffeShop({
+            id: NON_EXISTENT_ID,
+            address: body.address,
+            square: body.square,
+            work: body.work,
+            name: body.name
+        })
+            .then((result: coffeShop) => {
+                console.log('Я тут1!');
+                return res.status(200).json(result);
+            })
+            .catch((error: systemError) => {
+                console.log('Я тут2!');
+                return ResponseHelper.handleError(res, error);
+            });
+        console.log('Я тут3!');
+    }
 
 
-
-
-
-export default { getCoffeShops, getCoffeShopById, updateCoffeShopId};
+export default { getCoffeShops, getCoffeShopById, updateCoffeShopId, addCoffeShop};

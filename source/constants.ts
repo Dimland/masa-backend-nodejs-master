@@ -28,7 +28,7 @@ export class SqlParameters {
 
 
 export const DB_CONNECTION_STRING: string = "server=.;Database=Dimland_store;Trusted_Connection=Yes;Driver={SQL Server Native Client 11.0}";
- 
+export const NON_EXISTENT_ID: number = -1;
 
 var address: string;
 var square: number;
@@ -41,5 +41,8 @@ export class Queries {
     public static allCoffeShops: string =  "SELECT * FROM coffe_shops";
     public static coffeShopsId: string = `SELECT * FROM coffe_shops where id_coffe_shops = ?`;
     public static updCoffeShop: string = `UPDATE coffe_shops SET address = ?, square = ?, working_hours = ?, name = ? WHERE id_coffe_shops = ?`;
+    public static AddCoffeShop: string = "INSERT INTO coffe_shops (address, square, working_hours, name) VALUES (?, ?,?,?)";
+    public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id";
+    
     static WhiteBoardTypeById: string;
 }
