@@ -1,9 +1,10 @@
 import { Connection, SqlClient, Error } from "msnodesqlv8";
 import { coffeShop, systemError } from "../entities";
-import { ErrorCodes, General, DB_CONNECTION_STRING, Queries } from "../constants";
+import { ErrorCodes, General, DB_CONNECTION_STRING, Queries, TEMP_USER_ID} from "../constants";
 import { ErrorHelper } from "../helpers/error.helpers";
 import { SqlHelper } from "../helpers/sql.helpers";
-
+import { Status } from "../enums"
+import { DateHelper } from "../helpers/date.helper";
 
 interface localCoffeShop {
     id_coffe_shops: number,
@@ -11,6 +12,11 @@ interface localCoffeShop {
     square: number,
     working_hours: string,
     name: string;
+    create_date: Date;
+    update_date: Date;
+    create_user_id: number;
+    update_user_id: number;
+    status_id: number;
 }
 
 interface ICoffeShopsService {
@@ -31,7 +37,7 @@ export class CoffeShopsService implements ICoffeShopsService {
         return new Promise<coffeShop[]>((resolve, reject) => {
             const result: coffeShop[] = [];
 
-                SqlHelper.executeQueryArrayResult<localCoffeShop>(Queries.allCoffeShops)
+                SqlHelper.executeQueryArrayResult<localCoffeShop>(Queries.allCoffeShops, Status.Active)
 
                         .then((queryResult: localCoffeShop[]) => {
                                 queryResult.forEach((coffeShop: localCoffeShop) => {
@@ -54,7 +60,7 @@ export class CoffeShopsService implements ICoffeShopsService {
         return new Promise<coffeShop>((resolve, reject) => {
        
                   
-      SqlHelper.executeQuerySingleResult<localCoffeShop>(Queries.coffeShopsId, id)
+      SqlHelper.executeQuerySingleResult<localCoffeShop>(Queries.coffeShopsId, id, Status.Active)
 
         
         .then((queryResult: localCoffeShop) => {
@@ -71,7 +77,7 @@ export class CoffeShopsService implements ICoffeShopsService {
 
     public updateCoffeShopId(coffe_shop: coffeShop): Promise<coffeShop> {
         return new Promise<coffeShop>((resolve, reject) => {
-            SqlHelper.executeQueryNoResult<coffeShop>(Queries.updCoffeShop, coffe_shop.address, coffe_shop.square, coffe_shop.work, coffe_shop.name, coffe_shop.id)
+            SqlHelper.executeQueryNoResult<coffeShop>(Queries.updCoffeShop, false, coffe_shop.address, coffe_shop.square, coffe_shop.work, coffe_shop.name, coffe_shop.id)
                 .then(() => {
 
                     resolve(coffe_shop);
@@ -97,8 +103,14 @@ export class CoffeShopsService implements ICoffeShopsService {
 
     public deleteCoffeShopId(id: number): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            SqlHelper.executeQueryNoResult<localCoffeShop>(Queries.DeleteCoffeShop, id)
-                .then(() => {
+            const updateDate: Date = new Date();
+            const updateUser: number = TEMP_USER_ID;
+            
+            SqlHelper.executeQueryNoResult<localCoffeShop>(Queries.DeleteCoffeShop, true, DateHelper.dateToString(updateDate), updateUser, Status.NotActive, id, Status.Active)
+               
+            
+            
+            .then(() => {
                     resolve();
                 })
                 .catch((error: systemError) => {

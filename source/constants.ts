@@ -43,7 +43,7 @@ export class Queries {
   
 
     public static allCoffeShops: string =  "SELECT * FROM coffe_shops WHERE status_id = ?";
-    public static coffeShopsId: string = `SELECT * FROM coffe_shops where id_coffe_shops = ?`;
+    public static coffeShopsId: string = `SELECT * FROM coffe_shops where id_coffe_shops = ?  AND status_id = ?`;
     public static updCoffeShop: string = `UPDATE coffe_shops SET address = ?, square = ?, working_hours = ?, name = ? WHERE id_coffe_shops = ?`;
     public static AddCoffeShop: string = "INSERT INTO coffe_shops (address, square, working_hours, name) VALUES (?, ?,?,?)";
     public static SelectIdentity: string = "SELECT SCOPE_IDENTITY() AS id";
