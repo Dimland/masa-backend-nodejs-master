@@ -16,12 +16,11 @@ export class SqlHelper {
 
     // public static SqlConnection(): Promise<Connection> {
 
-        public static executeQueryArrayResult<T>(query: string): Promise<T[]> {
+        public static executeQueryArrayResult<T>(query: string, ...params: (string | number)[]): Promise<T[]> {
             return new Promise<T[]>((resolve, reject) => {
                 SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
-                    connection.query(query, (queryError: Error | undefined, queryResult: T[] | undefined) => {
-                        if (queryError) {
+                    connection.query(query, params, (queryError: Error | undefined, queryResult: T[] | undefined) => { if (queryError) {
                             reject(ErrorHelper.parseError(ErrorCodes.queryError, General.SqlQueryError));
                         }
                         else {
@@ -113,12 +112,7 @@ export class SqlHelper {
         });
     }
 
-
-
-
-
-
-    public static executeQueryNoResult<T>(query: string, ...params: (string | number)[]): Promise<void> {
+    public static executeQueryNoResult<T>(query: string, ignoreNoRowsAffected: boolean, ...params: (string | number)[]): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             SqlHelper.SqlConnection()
                 .then((connection: Connection) => {
@@ -137,7 +131,7 @@ export class SqlHelper {
                     });
 
                     q.on('rowcount', (rowCount: number) => {
-                        if (rowCount === 0) {
+                        if (!ignoreNoRowsAffected && rowCount === 0) {
                             reject(ErrorHelper.parseError(ErrorCodes.noData, General.noDataFound));
                             return;
                         }
